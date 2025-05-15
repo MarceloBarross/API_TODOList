@@ -1,5 +1,7 @@
 package com.example.API_TODOList.Itens;
 
-public interface ItensRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ItensRepository extends JpaRepository<ItensModel, Long>{
     
 }
