@@ -45,9 +45,13 @@ public class ItensController {
         itensService.delete(id);
     }
 
-    @PutMapping("update/{id}")
-    public ItensModel update(@PathVariable Long id, @RequestBody ItensModel data){
-        return itensService.update(id, data);
+    @PutMapping("updateDescricao/{id}")
+    public ItensModel updateDescricao(@PathVariable Long id, @RequestBody ItensModel data){
+        return itensService.updateDescricao(id, data);
+    }
+    @PutMapping("updateStatus/{id}")
+    public ItensModel updateStatus(@PathVariable Long id, @RequestBody ItensModel data){
+        return itensService.updateStatus(id, data);
     }
     
 }

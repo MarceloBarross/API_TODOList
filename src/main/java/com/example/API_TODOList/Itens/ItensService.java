@@ -32,9 +32,18 @@ public class ItensService {
         itensRepository.deleteById(id);
     }
     
-    public ItensModel update(Long id, ItensModel itensModel){
+    public ItensModel updateDescricao(Long id, ItensModel data){
         if(itensRepository.existsById(id)){
-            itensModel.setId(id);
+            ItensModel itensModel = itensRepository.findById(id).orElse(null);  
+            itensModel.setDescricao(data.getDescricao());
+            return itensRepository.save(itensModel);
+        }
+        return null;
+    }
+    public ItensModel updateStatus(Long id, ItensModel data){
+        if(itensRepository.existsById(id)){
+            ItensModel itensModel = itensRepository.findById(id).get();  
+            itensModel.setStatus(data.isStatus());
             return itensRepository.save(itensModel);
         }
         return null;
