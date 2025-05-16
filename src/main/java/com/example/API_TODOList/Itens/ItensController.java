@@ -45,11 +45,11 @@ public class ItensController {
         itensService.delete(id);
     }
 
-    @PutMapping("updateDescricao/{id}")
+    @PutMapping("/updateDescricao/{id}")
     public ItensModel updateDescricao(@PathVariable Long id, @RequestBody ItensModel data){
         return itensService.updateDescricao(id, data);
     }
-    @PutMapping("updateStatus/{id}")
+    @PutMapping("/updateStatus/{id}")
     public ItensModel updateStatus(@PathVariable Long id, @RequestBody ItensModel data){
         return itensService.updateStatus(id, data);
     }
