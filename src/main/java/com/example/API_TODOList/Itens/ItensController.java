@@ -4,6 +4,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,32 +28,51 @@ public class ItensController {
 
 
     @GetMapping("/read")
-    public List<ItensDTO> readAll(){
-        return itensService.readAll();
+    public ResponseEntity<List<ItensDTO>> readAll(){
+        List<ItensDTO> itensDTOs = itensService.readAll();
+        return ResponseEntity.ok(itensDTOs);
     }
 
     @GetMapping("/read/{id}")
-    public ItensDTO readOne(@PathVariable Long id){
-        return itensService.readOne(id);
+    public ResponseEntity<?> readOne(@PathVariable Long id){
+        ItensDTO itensDTO = itensService.readOne(id);
+        if (itensDTO != null) {
+            return ResponseEntity.ok(itensDTO);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Item com id: " + id + " nao encontrado");
     }
 
     @PostMapping("/create")
-    public ItensDTO create(@RequestBody ItensDTO itensDTO){
-        return itensService.create(itensDTO);
+    public ResponseEntity<String> create(@RequestBody ItensDTO itensDTO){
+        ItensDTO itenCriado = itensService.create(itensDTO);
+        return ResponseEntity.status(HttpStatus.CREATED)
+        .body("Item '" + itenCriado.getDescricao() + "' criado");
     }
 
     @DeleteMapping("/delete/{id}")
-    public void delete(@PathVariable Long id){
-        itensService.delete(id);
+    public ResponseEntity<String> delete(@PathVariable Long id){
+        if (itensService.readOne(id) != null) {
+            itensService.delete(id);
+            return ResponseEntity.ok("Item deletado");
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Item com id: " + id + " nao encontrado");
     }
 
     @PutMapping("/updateDescricao/{id}")
-    public ItensDTO updateDescricao(@PathVariable Long id, @RequestBody ItensDTO data){
-        return itensService.updateDescricao(id, data);
+    public ResponseEntity<?> updateDescricao(@PathVariable Long id, @RequestBody ItensDTO data){
+        if (itensService.readOne(id) != null) {
+            ItensDTO itensDTO = itensService.updateDescricao(id, data);
+            return ResponseEntity.ok(itensDTO);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Item com id: " + id + " nao encontrado");
     }
     @PutMapping("/updateStatus/{id}")
-    public ItensDTO updateStatus(@PathVariable Long id, @RequestBody ItensModel data){
-        return itensService.updateStatus(id, data);
+    public ResponseEntity<?> updateStatus(@PathVariable Long id, @RequestBody ItensModel data){
+        if (itensService.readOne(id) != null) {
+            ItensDTO itensDTO = itensService.updateStatus(id, data);
+            return ResponseEntity.ok(itensDTO);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Item com id: " + id + " nao encontrado");
     }
     
 }
