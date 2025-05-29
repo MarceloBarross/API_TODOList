@@ -26,18 +26,18 @@ public class ItensController {
 
 
     @GetMapping("/read")
-    public List<ItensModel> readAll(){
+    public List<ItensDTO> readAll(){
         return itensService.readAll();
     }
 
     @GetMapping("/read/{id}")
-    public ItensModel readOne(@PathVariable Long id){
+    public ItensDTO readOne(@PathVariable Long id){
         return itensService.readOne(id);
     }
 
     @PostMapping("/create")
-    public ItensModel create(@RequestBody ItensModel itensModel){
-        return itensService.create(itensModel);
+    public ItensDTO create(@RequestBody ItensDTO itensDTO){
+        return itensService.create(itensDTO);
     }
 
     @DeleteMapping("/delete/{id}")
@@ -46,11 +46,11 @@ public class ItensController {
     }
 
     @PutMapping("/updateDescricao/{id}")
-    public ItensModel updateDescricao(@PathVariable Long id, @RequestBody ItensModel data){
+    public ItensDTO updateDescricao(@PathVariable Long id, @RequestBody ItensDTO data){
         return itensService.updateDescricao(id, data);
     }
     @PutMapping("/updateStatus/{id}")
-    public ItensModel updateStatus(@PathVariable Long id, @RequestBody ItensModel data){
+    public ItensDTO updateStatus(@PathVariable Long id, @RequestBody ItensModel data){
         return itensService.updateStatus(id, data);
     }
     

@@ -2,6 +2,7 @@ package com.example.API_TODOList.Itens;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -9,44 +10,53 @@ import org.springframework.stereotype.Service;
 public class ItensService {
 
     private ItensRepository itensRepository;
+    private ItensMapper itensMapper;
 
-    public ItensService(ItensRepository itensRepository){
+    public ItensService(ItensRepository itensRepository, ItensMapper itensMapper){
         this.itensRepository = itensRepository;
+        this.itensMapper = itensMapper;
     }
 
-    public List<ItensModel> readAll(){
-        return itensRepository.findAll();
+    public List<ItensDTO> readAll(){
+        List<ItensModel> itensModels = itensRepository.findAll();
+        List<ItensDTO> itensDTOs = itensModels.stream().map(itensMapper::toDTO).collect(Collectors.toList());
+        return itensDTOs;
     }
 
-    public ItensModel readOne(Long id){
+    public ItensDTO readOne(Long id){
         Optional<ItensModel> itensModel = itensRepository.findById(id);
-        ItensModel item = itensModel.get();
-        return item;
+        return itensModel.map(itensMapper::toDTO).orElse(null);
     }
     
-    public ItensModel create(ItensModel itensModel){
-        return itensRepository.save(itensModel);
+    public ItensDTO create(ItensDTO itensDTO){
+        ItensModel itensModel = itensMapper.toModel(itensDTO);
+        itensModel = itensRepository.save(itensModel);
+        return itensMapper.toDTO(itensModel);
     }
     
     public void delete(Long id){
         itensRepository.deleteById(id);
     }
     
-    public ItensModel updateDescricao(Long id, ItensModel data){
-        if(itensRepository.existsById(id)){
-            ItensModel itensModel = itensRepository.findById(id).orElse(null);  
+    public ItensDTO updateDescricao(Long id, ItensDTO data){
+
+        return itensRepository.findById(id)
+        .map(itensModel -> {
             itensModel.setDescricao(data.getDescricao());
-            return itensRepository.save(itensModel);
-        }
-        return null;
+            itensModel = itensRepository.save(itensModel);
+            return itensMapper.toDTO(itensModel);
+        })
+        .orElse(null);
     }
-    public ItensModel updateStatus(Long id, ItensModel data){
-        if(itensRepository.existsById(id)){
-            ItensModel itensModel = itensRepository.findById(id).get();  
+    public ItensDTO updateStatus(Long id, ItensModel data){
+
+        return itensRepository.findById(id)
+        .map(itensModel -> {
             itensModel.setStatus(data.isStatus());
-            return itensRepository.save(itensModel);
-        }
-        return null;
+            itensModel = itensRepository.save(itensModel);
+            return itensMapper.toDTO(itensModel);
+        })
+        .orElse(null);
     }
     
 }
